@@ -1,0 +1,107 @@
+# uncompyle6 version 3.9.0
+# Python bytecode version base 2.7 (62211)
+# Decompiled from: Python 2.7.16 (v2.7.16:413a49145e, Mar  4 2019, 01:30:55) [MSC v.1500 32 bit (Intel)]
+# Embedded file name: toontown.reborn.SewerBarrel
+# Compiled at: 2014-04-30 09:53:54
+from pandac.PandaModules import *
+from direct.interval.IntervalGlobal import *
+from toontown.toonbase.ToontownGlobals import *
+from toontown.coghq import BarrelBase
+from direct.directnotify import DirectNotifyGlobal
+
+class SewerBarrel(NodePath, BarrelBase.BarrelBase):
+    notify = DirectNotifyGlobal.directNotify.newCategory('SewerBarrel')
+
+    def __init__(self, parent):
+        node = hidden.attachNewNode('SewerBarrel')
+        NodePath.__init__(self, node)
+        self.parent = parent
+        self.rewardPerGrabMax = 0
+        self.grabSoundPath = 'phase_4/audio/sfx/SZ_DD_treasure.ogg'
+        self.rejectSoundPath = 'phase_4/audio/sfx/ring_miss.ogg'
+        self.animTrack = None
+        self.shadow = 0
+        self.barrelScale = 0.5
+        self.sphereRadius = 4.2
+        self.playSoundForRemoteToons = 1
+        self.gagNode = None
+        self.gagModel = None
+        self.barrel = None
+        self.grabbed = False
+        return
+
+    def disable(self):
+        if self.animTrack:
+            self.animTrack.pause()
+            self.animTrack = None
+        return
+
+    def delete(self):
+        self.gagNode.removeNode()
+        del self.gagNode
+        if self.barrel:
+            self.barrel.removeNode()
+            del self.barrel
+            self.barrel = None
+        return
+
+    def generate(self):
+        self.loadModel()
+        self.collSphere = CollisionSphere(0, 0, 0, self.sphereRadius)
+        self.collSphere.setTangible(0)
+        self.collNode = CollisionNode(self.uniqueName('barrelSphere'))
+        self.collNode.setIntoCollideMask(WallBitmask)
+        self.collNode.addSolid(self.collSphere)
+        self.collNodePath = self.barrel.attachNewNode(self.collNode)
+        self.collNodePath.hide()
+        self.applyLabel()
+        self.parent.accept(self.uniqueName('enterbarrelSphere'), self.handleEnterSphere)
+
+    def loadModel(self):
+        self.grabSound = base.loadSfx(self.grabSoundPath)
+        self.rejectSound = base.loadSfx(self.rejectSoundPath)
+        self.barrel = loader.loadModel('phase_4/models/cogHQ/gagTank')
+        self.barrel.setScale(self.barrelScale)
+        self.barrel.reparentTo(self)
+        dcsNode = self.barrel.find('**/gagLabelDCS')
+        dcsNode.setColor(0.15, 0.15, 0.1)
+        self.gagNode = self.barrel.attachNewNode('gagNode')
+        self.gagNode.setPosHpr(0.0, -2.62, 4.0, 0, 0, 0)
+        self.gagNode.setColorScale(0.7, 0.7, 0.6, 1)
+
+    def handleEnterSphere(self, collEntry=None):
+        localAvId = base.localAvatar.getDoId()
+        self.d_requestGrab()
+
+    def d_requestGrab(self):
+        if not self.grabbed:
+            self.parent.sendUpdate('requestGrab', [id(self)])
+            self.grabbed = True
+        else:
+            self.notify.debug('already grabbed!!!')
+
+    def setGrab(self, avId):
+        self.notify.debug('handleGrab %s' % avId)
+        self.avId = avId
+        if avId == base.localAvatar.doId:
+            self.parent.ignore(self.uniqueName('entertreasureSphere'))
+            self.barrel.setColorScale(0.5, 0.5, 0.5, 1)
+        if self.playSoundForRemoteToons or self.avId == base.localAvatar.getDoId():
+            base.playSfx(self.grabSound)
+        if self.animTrack:
+            self.animTrack.finish()
+            self.animTrack = None
+        flytime = 1.0
+        self.animTrack = Sequence(LerpScaleInterval(self.barrel, 0.2, 1.1 * self.barrelScale, blendType='easeInOut'), LerpScaleInterval(self.barrel, 0.2, self.barrelScale, blendType='easeInOut'), Func(self.resetBarrel), name=self.uniqueName('animTrack'))
+        self.animTrack.start()
+        return
+
+    def setReject(self):
+        self.notify.debug('I was rejected!!!!!')
+
+    def resetBarrel(self):
+        self.barrel.setScale(self.barrelScale)
+        self.parent.accept(self.uniqueName('entertreasureSphere'), self.handleEnterSphere)
+
+    def uniqueName(self, name):
+        return '%s-%s' % (name, id(self))

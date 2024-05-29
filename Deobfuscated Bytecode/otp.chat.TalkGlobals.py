@@ -1,0 +1,24 @@
+# uncompyle6 version 3.9.0
+# Python bytecode version base 2.7 (62211)
+# Decompiled from: Python 2.7.16 (v2.7.16:413a49145e, Mar  4 2019, 01:30:55) [MSC v.1500 32 bit (Intel)]
+# Embedded file name: otp.chat.TalkGlobals
+# Compiled at: 2014-04-30 09:53:54
+TALK_NONE = 0
+TALK_OPEN = 1
+TALK_WHISPER = 2
+TALK_ACCOUNT = 13
+TALK_GM = 14
+AVATAR_THOUGHT = 16
+TALK_GUILD = 3
+TALK_PARTY = 4
+TALK_PVP = 5
+UPDATE_GUILD = 6
+UPDATE_FRIEND = 7
+UPDATE_PARTY = 8
+UPDATE_PVP = 9
+INFO_SYSTEM = 10
+INFO_GAME = 11
+INFO_AVATAR_UNAVAILABLE = 12
+INFO_OPEN = 15
+INFO_DEV = 17
+INFO_GUILD = 18

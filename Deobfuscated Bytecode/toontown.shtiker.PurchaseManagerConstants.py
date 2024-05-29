@@ -1,0 +1,14 @@
+# uncompyle6 version 3.9.0
+# Python bytecode version base 2.7 (62211)
+# Decompiled from: Python 2.7.16 (v2.7.16:413a49145e, Mar  4 2019, 01:30:55) [MSC v.1500 32 bit (Intel)]
+# Embedded file name: toontown.shtiker.PurchaseManagerConstants
+# Compiled at: 2014-04-30 09:53:54
+PURCHASE_NO_CLIENT_STATE = 0
+PURCHASE_WAITING_STATE = 1
+PURCHASE_PLAYAGAIN_STATE = 2
+PURCHASE_EXIT_STATE = 3
+PURCHASE_DISCONNECTED_STATE = 4
+PURCHASE_UNREPORTED_STATE = 10
+PURCHASE_REPORTED_STATE = 11
+PURCHASE_CANTREPORT_STATE = 12
+PURCHASE_COUNTDOWN_TIME = 120
