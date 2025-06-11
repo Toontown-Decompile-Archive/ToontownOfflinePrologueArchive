@@ -25,14 +25,14 @@ class DistributedPrologue2Event(DistributedObject, FSM):
         self.laffMeter = base.localAvatar.laffMeter
         self.book = base.localAvatar.book.bookOpenButton
         self.book2 = base.localAvatar.book.bookCloseButton
-        self.nigger = NPCToons.createLocalNPC(14011)
-        self.nigger.useLOD(1000)
-        self.nigger.head = self.nigger.find('**/__Actor_head')
-        self.nigger.initializeBodyCollisions('toon')
-        self.nigger.setPosHpr(-53.317, 229.216, 10.015, -518, 0, 0)
-        self.nigger.reparentTo(render)
-        self.nigger.loop('neutral')
-        self.nigger.addActive()
+        self.rocky = NPCToons.createLocalNPC(14011)
+        self.rocky.useLOD(1000)
+        self.rocky.head = self.rocky.find('**/__Actor_head')
+        self.rocky.initializeBodyCollisions('toon')
+        self.rocky.setPosHpr(-53.317, 229.216, 10.015, -518, 0, 0)
+        self.rocky.reparentTo(render)
+        self.rocky.loop('neutral')
+        self.rocky.addActive()
         self.logano = NPCToons.createLocalNPC(14006)
         self.logano.useLOD(1000)
         self.logano.head = self.logano.find('**/__Actor_head')
